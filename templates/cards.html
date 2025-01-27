@@ -1,0 +1,50 @@
+<!doctype html>
+<title>My Cards</title>
+
+<ul>
+    {% for card in cards %}
+        <li>
+            <p>
+                Name: {{ card.name }}
+            </p>
+            <p>
+                Last Used: {{ card.updated_at.replace(tzinfo=from_tz).astimezone(to_tz) }}
+            </p>
+            <p>
+                <button onclick="useCard('{{ card.id }}', '{{ card.name }}')">Use Card</button>
+                <button onclick="deleteCard('{{ card.id }}', '{{ card.name }}')">Delete Card</button>
+            </p>
+        </li>
+    {% endfor %}
+</ul>
+
+<form action="/cards" method="post">
+    <input type="text" name="name" placeholder="Card Name">
+    <button type="submit">Add Card</button>
+</form>
+
+<script>
+    function useCard(id, name) {
+        if (!confirm(`Are you sure you want to use the card ${name}?`)) {
+            return;
+        }
+
+        fetch(`/cards/${id}`, {
+            method: 'POST',
+        }).then(() => {
+            window.location.href = '/cards';
+        });
+    }
+
+    function deleteCard(id, name) {
+        if (!confirm(`Are you sure you want to delete the card ${name}?`)) {
+            return;
+        }
+
+        fetch(`/cards/${id}`, {
+            method: 'DELETE',
+        }).then(() => {
+            window.location.href = '/cards';
+        });
+    }
+</script>

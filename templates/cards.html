@@ -26,14 +26,8 @@
                             <div class="card-body">
                                 <h5 class="card-title">{{ card.name }}</h5>
                                 <p class="card-text">Last used: {{ card.updated_at.replace(tzinfo=from_tz).astimezone(to_tz).strftime('%m/%d %H:%M') }}</p>
-                                <div class="d-grid gap-3 col-12 d-md-block">
-                                    <button onclick="useCard('{{ card.id }}', '{{ card.name }}')" class="btn btn-primary">
-                                        Use Card
-                                    </button>
-                                    <button onclick="deleteCard('{{ card.id }}', '{{ card.name }}')" class="btn btn-danger">
-                                        Delete Card
-                                    </button>
-                                </div>
+                                <button onclick="useCard('{{ card.id }}', '{{ card.name }}')" class="btn btn-primary">Use Card</button>
+                                <button onclick="deleteCard('{{ card.id }}', '{{ card.name }}')" class="btn btn-danger">Delete Card</button>
                             </div>
                         </div>
                     </div>

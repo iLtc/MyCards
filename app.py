@@ -3,6 +3,9 @@ import zoneinfo as zi
 from flask import Flask, request, render_template, redirect, url_for
 import database
 
+from_tz = zi.ZoneInfo("UTC")
+to_tz = zi.ZoneInfo("America/Los_Angeles")
+
 app = Flask(__name__, instance_relative_config=True)
 
 app.config.from_mapping(
@@ -30,13 +33,13 @@ def status():
         return "OK: No cards"
     else:
         card_last_updated = db.execute("SELECT updated_at FROM card ORDER BY updated_at DESC LIMIT 1").fetchone()[0]
-        return f"OK: {cards_count} cards, last updated at {card_last_updated}"
+        return f"OK: {cards_count} cards, last updated at {card_last_updated.replace(tzinfo=from_tz).astimezone(to_tz)}"
 
 @app.get("/cards")
 def get_cards():
     db = database.get_db()
     cards = db.execute("SELECT * FROM card ORDER BY updated_at ASC").fetchall()
-    return render_template("cards.html", cards=cards, from_tz=zi.ZoneInfo("UTC"), to_tz=zi.ZoneInfo("America/Los_Angeles"))
+    return render_template("cards.html", cards=cards, from_tz=from_tz, to_tz=to_tz)
 
 @app.post("/cards")
 def create_card():
